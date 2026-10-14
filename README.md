@@ -24,67 +24,41 @@
 > grep là lọc, còn grep -v là lọc ngược (tức là lọc hẵn không hiển thị lên màn hình nữa)
 > wc -l thì là nó sẽ đếm có bao nhiêu và hiển thị trên màn hình là con số chứ không phải in tất cả lên màn hình.
 ## So sánh + kết luận giữa GITBASH & PWS
+Thao tác
+1. Git Bash (Linux/Unix commands)
+2. PowerShell (PWS)
+### **Tìm file theo định dạng (đệ quy)**
+1. `find -name "*.log"`
 
-Mục đích / Thao tác
-
-Git Bash (Linux/Unix commands)
-
-PowerShell (PWS)
-
-Giải thích ngắn gọn
-
-**Tìm file theo định dạng (đệ quy)**
-
-`find -name "*.log"`
-
-`Get-ChildItem -Filter *.log -Recurse`
-
+2. `Get-ChildItem -Filter *.log -Recurse`
 _(viết tắt: `gci`)_
-
 Tìm tất cả các file có đuôi `.log` trong thư mục hiện tại và các thư mục con.
 
-**Đọc nội dung file**
-
-`-exec cat {} +`
-
+### **Đọc nội dung file**
+1. `-exec cat {} +`
 _(hoặc dùng lệnh `cat`)_
-
 Truyền trực tiếp qua ống dẫn `|`
-
-_(hoặc dùng lệnh `Get-Content` / `cat`)_
-
+2. _(hoặc dùng lệnh `Get-Content` / `cat`)_
 Đọc nội dung để chuẩn bị cho bước lọc. PowerShell tự động truyền object nội dung qua pipe mà không cần `cat`.
+### **Lọc chuỗi (Tìm kiếm)**
+1. `grep "TIMEOUT"`
 
-**Lọc chuỗi (Tìm kiếm)**
-
-`grep "TIMEOUT"`
-
-`Select-String "TIMEOUT"`
-
+2. `Select-String "TIMEOUT"`
 Chỉ giữ lại những dòng có chứa từ "TIMEOUT".
+### **Lọc ngược (Loại trừ)**
+1. `grep -v "NOT TIMEOUT"`
 
-**Lọc ngược (Loại trừ)**
-
-`grep -v "NOT TIMEOUT"`
-
-`Where-Object { $_ -notmatch "NOT TIMEOUT" }`
-
+2. `Where-Object { $_ -notmatch "NOT TIMEOUT" }`
 Bỏ đi những dòng chứa từ "NOT TIMEOUT" (tránh bẫy dữ liệu).
+### **Đếm số lượng kết quả**
+1. `wc -l`
 
-**Đếm số lượng kết quả**
-
-`wc -l`
-
-`( ... ).count`
-
+2. `( ... ).count`
 _(hoặc `| Measure-Object`)_
 
 Trả về con số tổng dòng/kết quả cuối cùng thay vì in toàn bộ ra màn hình.
+### **Tổng hợp toàn bộ câu lệnh giải quyết bài toán**
+1. `find -name "*.log" -exec cat {} + | grep "TIMEOUT" | grep -v "NOT TIMEOUT" | wc -l`
 
-**Tổng hợp toàn bộ câu lệnh giải quyết bài toán**
-
-`find -name "*.log" -exec cat {} + | grep "TIMEOUT" | grep -v "NOT TIMEOUT" | wc -l`
-
-`(gci -filter *.log -recurse | select-string "TIMEOUT" | where-object { $_ -notmatch "NOT TIMEOUT" }).count`
-
+2. `(gci -filter *.log -recurse | select-string "TIMEOUT" | where-object { $_ -notmatch "NOT TIMEOUT" }).count`
 Chuỗi lệnh pipe (`|`) hoàn chỉnh để giải quyết yêu cầu đề bài.
